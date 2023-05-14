@@ -57,7 +57,8 @@ public class FileStoreServiceImpl {
 
 	public byte[] downloadBase64File(String filename) {
 		String data = fsService.retrieveFileByName(filename).getFilebase64();
-		return Base64.decodeBase64(data.split(",")[1]);
+		String content = data.split(",")[1];
+		return Base64.decodeBase64(content);
 	}
 
 }
