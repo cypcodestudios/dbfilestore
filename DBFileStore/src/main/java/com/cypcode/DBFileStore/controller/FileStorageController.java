@@ -29,6 +29,13 @@ public class FileStorageController {
 
 		return ResponseEntity.ok(response);
 	}
+	
+	@PostMapping("multipart/s3")
+	public ResponseEntity<?> uploadMulitpartFileToS3(@RequestParam("file") MultipartFile data) {
+		String response = fsServiceImpl.uploadFileToS3(data);
+
+		return ResponseEntity.ok(response);
+	}
 
 	@PostMapping("base64")
 	public ResponseEntity<?> uploadBase64File(@RequestBody FileStorageDTO data) {
@@ -55,6 +62,15 @@ public class FileStorageController {
 	public ResponseEntity<?> downloadMulitpartFile(@PathVariable String filename) {
 		FileStorage fileDetails = fsServiceImpl.retreiveFile(filename);
 		byte[] file = fsServiceImpl.downloadMulitpartFile(filename);
+
+		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf(fileDetails.getFiletype()))
+				.body(file);
+	}
+	
+	@GetMapping("multipart/s3/{filename}")
+	public ResponseEntity<?> downloadMulitpartS3File(@PathVariable String filename) {
+		FileStorage fileDetails = fsServiceImpl.retreiveFile(filename);
+		byte[] file = fsServiceImpl.downloadS3File(filename);
 
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf(fileDetails.getFiletype()))
 				.body(file);
